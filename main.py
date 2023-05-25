@@ -77,12 +77,14 @@ def kill_monster(monsterX,monsterY,bulletX,bulletY):
         return True
     else:
         return False
-    
 
-   
+def gameover():
+
     
 # Game running
 running = True
+pause = False
+
 while running:
     screen.fill((0,0,0))
     screen.blit(background,(0,0))
@@ -129,6 +131,11 @@ while running:
 
 # enemy movements
     for i in range (num_enemies):
+        if enemyY[i] > 200:
+           for j in range (num_enemies):
+               enemyY[j] = 2000
+               gameover()
+
         enemyX[i] += enemyX_change[i] #the [i] is to know which of the 6 enemies we are pointing that's why is everywhere 
         if enemyX[i] <= 0:
             enemyX_change[i] = 1
@@ -162,3 +169,6 @@ while running:
 # called function
     player(playerX,playerY)
     pygame.display.update()
+
+while pause:
+    
