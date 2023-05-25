@@ -2,6 +2,7 @@
 
 import pygame
 import random
+import math
 # initialisation 
 pygame.init()
 
@@ -14,6 +15,9 @@ background = pygame.image.load('background.jpg')
 pygame.display.set_caption("Space Invaders")
 icon = pygame.image.load("arcade.png")
 pygame.display.set_icon(icon)
+
+# score
+score = 0
 
 # player
 playerImg = pygame.image.load("spaceship.png")
@@ -30,17 +34,15 @@ enemyX = random.randint(0,736)
 enemyY = random.randint(50, 150)
 enemyX_change = 1
 enemyY_change = 40
-enemy_state = "alive"
+
 
 def enemy(x,y):
-    if enemy_state == "alive":
         screen.blit(enemyImg,(enemyX,enemyY))
-    if enemy_state == "dead":
-        print ("GOOD JOB")
     
 
 # bullet 
 bulletImg = pygame.image.load('bullet.png')
+bulletX = 0
 bulletY = 480
 bulletY_change = -2
 bullet_state = "ready"  #ready you dont see the bullet / fire yes
@@ -51,16 +53,15 @@ def fire_bullet(x,y):
     bullet_state = "fire"
     screen.blit(bulletImg,(x, y))
 
-# def kill_monster(xmonster,ymonster,xbullet,ybullet):
-#     if xmonster and ymonster == xbullet and ybullet:
-#         global bullet_state
-#         global enemy_state
-#         bullet_state = "ready" 
-#         enemy_state = "dead"
-
-
+def kill_monster(monsterX,monsterY,bulletX,bulletY):
+    distance = math.sqrt((math.pow(monsterX-bulletX, 2)) + (math.pow(monsterY-bulletY, 2)))
+    if distance < 27:
+        return True
+    else:
+        return False
     
 
+    
 # Game running
 running = True
 while running:
@@ -79,6 +80,7 @@ while running:
             if bullet_state == 'ready':
                 bulletX = playerX
                 fire_bullet(bulletX,bulletY)
+                
 
             
         if event.key == pygame.K_LEFT:
@@ -90,6 +92,7 @@ while running:
             playerX_change = 0
        
   
+    
       
     
     
@@ -118,12 +121,19 @@ while running:
     if bullet_state is 'fire':
         fire_bullet(bulletX, bulletY)
         bulletY += bulletY_change
-        
-        
+       
+# collision
+    collision = kill_monster(enemyX,enemyY,bulletX,bulletY)
+    if collision:
+        bulletY = 480
+        bullet_state = 'ready'     
+        score += 1
+        print(score)
+        enemyX = random.randint(0,736)
+        enemyY = random.randint(50, 150)
     
        
 # called function
-    
     player(playerX,playerY)
     enemy(enemyX,enemyY)
     pygame.display.update()
