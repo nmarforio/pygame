@@ -78,12 +78,16 @@ def kill_monster(monsterX,monsterY,bulletX,bulletY):
     else:
         return False
 
-def gameover():
+def gameover ():
+    go_text= pygame.font.Font('freesansbold.ttf', 64)
+    game_over= go_text.render('GAME OVER',True,(255,255,255))
+    screen.blit(game_over,(200,250))
+
+
 
     
 # Game running
 running = True
-pause = False
 
 while running:
     screen.fill((0,0,0))
@@ -115,11 +119,6 @@ while running:
         if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
             playerX_change = 0
        
-  
-    
-      
-    
-    
  
 # player boundries
     playerX += playerX_change
@@ -130,11 +129,14 @@ while running:
 
 
 # enemy movements
+
     for i in range (num_enemies):
-        if enemyY[i] > 200:
-           for j in range (num_enemies):
-               enemyY[j] = 2000
-               gameover()
+        #game over
+        if enemyY[i] > 440:
+            for j in range (num_enemies):
+                enemyY[j] = 2000
+            gameover()
+            break
 
         enemyX[i] += enemyX_change[i] #the [i] is to know which of the 6 enemies we are pointing that's why is everywhere 
         if enemyX[i] <= 0:
@@ -170,5 +172,4 @@ while running:
     player(playerX,playerY)
     pygame.display.update()
 
-while pause:
-    
+
